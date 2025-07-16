@@ -18,17 +18,16 @@ void cmd_init(int baud_rate){
     console_print("\n\nConsole initialized! Enter 'help' for more info.\n");
 }
 
-int cmd_find(){
-    for(int i = 0; i < MAX_CMDS; i++){
-        if(cmd_list[i].name[0] == 0)
-            return i;
-    }
-    return -1;
-}
-
 void cmd_add(command_t *command){
-    int idx = cmd_find();
-
+    int idx = -1;
+    
+    for(int i = 0; i < MAX_CMDS; i++){
+        if(cmd_list[i].name[0] == 0){
+            idx = i;
+            break;
+        }
+    }
+ 
     if(idx == -1)
         return;
 
