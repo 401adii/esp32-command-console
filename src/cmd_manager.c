@@ -1,5 +1,7 @@
 #include"cmd_manager.h"
 
+command_t cmd_list[MAX_CMDS];
+
 void cmd_init(int baud_rate){
     console_init(baud_rate);
     vTaskDelay(500 / portTICK_PERIOD_MS);
@@ -17,9 +19,11 @@ void cmd_add(char *name, func callable){
             break;
         }
     }
-    for(int i = 0; i < strlen(name); i++){
-        cmd_list[idx].name[i] = name[i];
-    }
+    if(idx == -1)
+        return;
+    
+    strncpy(cmd_list[idx].name, name, MAX_CMD_LEN - 1);
+    cmd_list[idx].name[MAX_CMD_LEN - 1] = '\0';
     cmd_list[idx].callable = callable;
 }
 
@@ -40,16 +44,14 @@ void cmd_monit(){
     console_readln(buff);
     console_print(buff);
 
-    for(int i = 0; i < MAX_CMDS; i++){
-        if(cmd_list[i].name[0] == '\0')
-            break;
-
+    int found = 0;
+    for(int i = 0; i < MAX_CMDS && cmd_list[i].name[0] != '\0'; i++){
         if(strcmp(buff, cmd_list[i].name) == 0){
+            found = 1;
             cmd_list[i].callable();
-            memset(buff, '\0', MAX_CMD_LEN);
-        }
-        else{
-            console_print("Error: command not found\n");
+            break;
         }
     }
+    if(!found)
+        console_print("Error: command not found\n");
 }

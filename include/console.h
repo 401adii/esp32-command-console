@@ -1,3 +1,6 @@
+#ifndef CONSOLE_H
+#define CONSOLE_H
+
 #include<string.h>
 #include<ctype.h>
 #include"freertos/FreeRTOS.h"
@@ -12,3 +15,5 @@ void console_init(int baud_rate);
 void console_print(char* msg);
 int console_available();
 void console_readln(char* buff);
+
+#endif
