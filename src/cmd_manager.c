@@ -5,30 +5,38 @@ command_t cmd_list[MAX_CMDS];
 void cmd_init(int baud_rate){
     console_init(baud_rate);
     vTaskDelay(500 / portTICK_PERIOD_MS);
-    for(int i = 0; i < MAX_CMDS; i++)
-    memset(cmd_list[i].name, '\0', MAX_CMD_LEN);
-    cmd_add("help\n", cmd_help);
+    for(int i = 0; i < MAX_CMDS; i++){
+        memset(cmd_list[i].name, 0, MAX_CMD_NAME_LEN);
+        memset(cmd_list[i].description, 0, MAX_CMD_DESC_LEN);
+    }
+    command_t help_command = {
+        .name = "help\n",
+        .callable = cmd_help,
+        .description = "Prints this message.\n",
+    };
+    cmd_add(&help_command);
     console_print("\n\nConsole initialized! Enter 'help' for more info.\n");
 }
 
-void cmd_add(char *name, func callable){
-    int idx = -1;
+int cmd_find(){
     for(int i = 0; i < MAX_CMDS; i++){
-        if(cmd_list[i].name[0] == '\0'){
-            idx = i;
-            break;
-        }
+        if(cmd_list[i].name[0] == 0)
+            return i;
     }
+    return -1;
+}
+
+void cmd_add(command_t *command){
+    int idx = cmd_find();
+
     if(idx == -1)
         return;
-    
-    strncpy(cmd_list[idx].name, name, MAX_CMD_LEN - 1);
-    cmd_list[idx].name[MAX_CMD_LEN - 1] = '\0';
-    cmd_list[idx].callable = callable;
+
+    memcpy(&cmd_list[idx], command, sizeof(command_t));
 }
 
 void cmd_help(){
-    console_print("\nThis is console command interface that allows adding custom commands and calling functions via serial monitor\n");
+    console_print("\nCommand interface: \n");
     console_print("List of available commands:\n");
     for(int i = 0; i < MAX_CMDS; i++){
         if(cmd_list[i].name[0] == '\0')
@@ -40,7 +48,8 @@ void cmd_help(){
 void cmd_monit(){
     if(console_available() < 0)
         return;
-    char buff[MAX_CMD_LEN];
+ 
+    char buff[MAX_CMD_NAME_LEN];
     console_readln(buff);
     console_print(buff);
 
@@ -52,6 +61,7 @@ void cmd_monit(){
             break;
         }
     }
+    
     if(!found)
         console_print("Error: command not found\n");
 }

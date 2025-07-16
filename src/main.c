@@ -26,7 +26,12 @@ void switch_led(void){
 void app_main() {
     gpio_init();
     cmd_init(BAUD_RATE);
-    cmd_add("led\n", switch_led);
+    command_t led_command = {
+        .name = "led\n",
+        .description = "switches on/off built-in led",
+        .callable = switch_led,
+    };
+    cmd_add(&led_command);
     while(1){
         cmd_monit();
         vTaskDelay(100 / portTICK_PERIOD_MS);
