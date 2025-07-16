@@ -32,6 +32,7 @@ void console_readln(char* buff){
             switch(c){
             case '\n':
             case '\r':
+                buff[index++] = '\n';
                 line_end = 1;
                 break;
             case '\b':
