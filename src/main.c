@@ -28,7 +28,7 @@ void app_main() {
     cmd_init(BAUD_RATE);
     command_t led_command = {
         .name = "led\n",
-        .description = "switches on/off built-in led",
+        .description = "Turns on/off built-in led\n",
         .callable = switch_led,
     };
     cmd_add(&led_command);

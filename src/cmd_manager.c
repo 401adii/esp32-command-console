@@ -38,9 +38,15 @@ void cmd_help(){
     console_print("\nCommand interface: \n");
     console_print("List of available commands:\n");
     for(int i = 0; i < MAX_CMDS; i++){
-        if(cmd_list[i].name[0] == '\0')
+        if(cmd_list[i].name[0] == 0)
             break;
         console_print(cmd_list[i].name);
+        if(cmd_list[i].description[0] == 0)
+            continue;
+        else{
+            console_print("  ->");
+            console_print(cmd_list[i].description);
+        }
     }
 }
 
