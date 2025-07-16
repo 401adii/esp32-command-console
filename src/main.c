@@ -1,11 +1,13 @@
-#include"console.h"
+#include"cmd_manager.h"
+#include"freertos/FreeRTOS.h"
+#include"freertos/task.h"
 
 #define BAUD_RATE 115200
 
 void app_main() {
-    console_init(BAUD_RATE);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    cmd_init(BAUD_RATE);
     while(1){
-       vTaskDelay(100 / portTICK_PERIOD_MS);
+        cmd_monit();
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
