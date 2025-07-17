@@ -34,8 +34,8 @@ void cmd_add(command_t *command){
     memcpy(&cmd_list[idx], command, sizeof(command_t));
 }
 
-void cmd_help(void* args){
-    console_print("List of available commands:\n");
+void cmd_help(void *args){
+    console_print("\n\nList of available commands:\n");
     for(int i = 0; i < MAX_CMDS; i++){
         if(cmd_list[i].name[0] == 0)
             break;
@@ -45,23 +45,32 @@ void cmd_help(void* args){
         else{
             console_print("\n  ->");
             console_print(cmd_list[i].description);
+            console_print("\n");
         }
     }
 }
 
-void cmd_monit(){
+void cmd_monit(void){
     if(console_available() < 0)
         return;
  
-    char buff[MAX_CMD_NAME_LEN];
-    console_readln(buff);
+    char input[MAX_CMD_NAME_LEN];
+    char *buff;
+    console_readln(input);
+    buff = strtok(input, DELIMITERS);
 
+    if(buff == NULL)
+        return;
 
     int found = 0;
     for(int i = 0; i < MAX_CMDS && cmd_list[i].name[0] != '\0'; i++){
         if(strcmp(buff, cmd_list[i].name) == 0){
             found = 1;
-            cmd_list[i].callable(NULL);
+            buff = strtok(NULL, DELIMITERS);
+            if(buff != NULL)
+                cmd_list[i].callable((void*)buff);
+            else
+                cmd_list[i].callable(NULL);
             break;
         }
     }

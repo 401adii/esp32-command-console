@@ -6,9 +6,9 @@
 #define MAX_CMDS 32
 #define MAX_CMD_NAME_LEN 32
 #define MAX_CMD_DESC_LEN 128
+#define DELIMITERS " \n\r"
 
-
-typedef void (*func)(void* args);
+typedef void (*func)(void *args);
 
 typedef struct{
     char name[MAX_CMD_NAME_LEN];
@@ -20,7 +20,7 @@ extern command_t cmd_list[MAX_CMDS];
 
 void cmd_init(int baud_rate);
 void cmd_add(command_t *command);
-void cmd_help();
-void cmd_monit();
+void cmd_help(void *params);
+void cmd_monit(void);
 
 #endif

@@ -49,5 +49,5 @@ void console_readln(char* buff){
     }
     buff[index] = '\0';
     console_print(buff);
-    console_print('\n');
+    console_print("\n");
 }
