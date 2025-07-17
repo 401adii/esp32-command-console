@@ -18,7 +18,7 @@ void gpio_init(void){
     gpio_config(&config);
 }
 
-void switch_led(void){
+void switch_led(void* args){
     state = !state;
     gpio_set_level(GPIO_NUM_2, state);
 }
@@ -27,7 +27,7 @@ void app_main() {
     gpio_init();
     cmd_init(BAUD_RATE);
     command_t led_command = {
-        .name = "led\n",
+        .name = "led",
         .description = "Turns on/off built-in led\n",
         .callable = switch_led,
     };

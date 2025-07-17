@@ -8,7 +8,7 @@
 #define MAX_CMD_DESC_LEN 128
 
 
-typedef void (*func)(void);
+typedef void (*func)(void* args);
 
 typedef struct{
     char name[MAX_CMD_NAME_LEN];

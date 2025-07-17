@@ -10,7 +10,7 @@ void cmd_init(int baud_rate){
         memset(cmd_list[i].description, 0, MAX_CMD_DESC_LEN);
     }
     command_t help_command = {
-        .name = "help\n",
+        .name = "help",
         .callable = cmd_help,
         .description = "Prints this message.\n",
     };
@@ -34,8 +34,7 @@ void cmd_add(command_t *command){
     memcpy(&cmd_list[idx], command, sizeof(command_t));
 }
 
-void cmd_help(){
-    console_print("\nCommand interface: \n");
+void cmd_help(void* args){
     console_print("List of available commands:\n");
     for(int i = 0; i < MAX_CMDS; i++){
         if(cmd_list[i].name[0] == 0)
@@ -44,7 +43,7 @@ void cmd_help(){
         if(cmd_list[i].description[0] == 0)
             continue;
         else{
-            console_print("  ->");
+            console_print("\n  ->");
             console_print(cmd_list[i].description);
         }
     }
@@ -56,13 +55,13 @@ void cmd_monit(){
  
     char buff[MAX_CMD_NAME_LEN];
     console_readln(buff);
-    console_print(buff);
+
 
     int found = 0;
     for(int i = 0; i < MAX_CMDS && cmd_list[i].name[0] != '\0'; i++){
         if(strcmp(buff, cmd_list[i].name) == 0){
             found = 1;
-            cmd_list[i].callable();
+            cmd_list[i].callable(NULL);
             break;
         }
     }
